@@ -1,8 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { CategoryCard } from "@/components/home/CategoryCard";
-import { ContinueTests } from "@/components/home/ContinueTests";
+
+const ContinueTests = dynamic(
+  () =>
+    import("@/components/home/ContinueTests").then((m) => m.ContinueTests),
+  { ssr: false },
+);
 import { SiteHeader } from "@/components/layout/SiteHeader";
 
 export function HomeContent() {

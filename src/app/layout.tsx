@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { PageTransition } from "@/components/layout/PageTransition";
-import { ThemeProvider } from "@/components/layout/ThemeProvider";
+import { Providers } from "@/components/layout/Providers";
 import { getMetadataBaseUrl } from "@/lib/env";
 import "./globals.css";
 
@@ -44,9 +43,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
-        <ThemeProvider>
-          <PageTransition>{children}</PageTransition>
-        </ThemeProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
