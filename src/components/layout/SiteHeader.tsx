@@ -1,7 +1,5 @@
-"use client";
-
 import Link from "next/link";
-import { ThemeToggle } from "@/components/layout/ThemeProvider";
+import { ThemeToggleSlot } from "@/components/layout/ThemeToggleSlot";
 
 export function SiteHeader({
   title,
@@ -25,7 +23,7 @@ export function SiteHeader({
         </h1>
       </div>
       <div className="flex items-center gap-2">
-        <ThemeToggle />
+        <ThemeToggleSlot />
         {actionHref && actionLabel ? (
           <Link href={actionHref} className="btn-primary hidden sm:inline-flex">
             {actionLabel}

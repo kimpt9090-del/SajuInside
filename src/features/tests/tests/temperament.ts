@@ -1,10 +1,29 @@
 import type { TestDefinition } from "../types";
+import { getTemperamentReportSections } from "../reports/temperament-reports";
+
+function resultWithSections(
+  id: "sanguine" | "choleric" | "melancholic" | "phlegmatic",
+  title: string,
+  summary: string,
+  details: string[],
+  color: "amber" | "rose" | "sky" | "emerald",
+) {
+  return {
+    id,
+    title,
+    summary,
+    details,
+    sections: getTemperamentReportSections(id),
+    color,
+  };
+}
 
 export const temperamentTest: TestDefinition = {
   id: "temperament",
   category: "types",
   title: "4가지 기질 검사",
-  description: "다혈질·담즙질·우울질·점액질 기질 경향을 확인합니다.",
+  description:
+    "다혈질·담즙질·우울질·점액질 기질을 분석하고, 직업·연애·균형 가이드를 상세히 제공합니다.",
   version: 1,
   questions: [
     { id: "q1", text: "새로운 사람을 만나면 금방 친해지는 편이다." },
@@ -21,50 +40,50 @@ export const temperamentTest: TestDefinition = {
     { id: "q12", text: "안정적인 루틴이 마음이 편하다." },
   ],
   results: {
-    sanguine: {
-      id: "sanguine",
-      title: "다혈질(Sanguine)",
-      summary: "사교적이고 낙천적이며 에너지가 넘치는 기질입니다.",
-      details: [
+    sanguine: resultWithSections(
+      "sanguine",
+      "다혈질(Sanguine)",
+      "사교적이고 낙천적이며 에너지가 넘치는 기질입니다. 사람과 분위기를 살리는 타입이에요.",
+      [
         "사람들과 어울리며 분위기를 살립니다.",
         "새로운 자극과 재미를 추구합니다.",
         "집중이 길게 이어지지 않을 때가 있어요.",
       ],
-      color: "amber",
-    },
-    choleric: {
-      id: "choleric",
-      title: "담즙질(Choleric)",
-      summary: "목표 지향적이고 추진력이 강한 기질입니다.",
-      details: [
+      "amber",
+    ),
+    choleric: resultWithSections(
+      "choleric",
+      "담즙질(Choleric)",
+      "목표 지향적이고 추진력이 강한 기질입니다. 리더십과 결단력이 두드러집니다.",
+      [
         "리더십과 결단력이 두드러집니다.",
         "효율과 성과를 중시합니다.",
         "타인의 감정에 둔감해 보일 수 있어요.",
       ],
-      color: "rose",
-    },
-    melancholic: {
-      id: "melancholic",
-      title: "우울질(Melancholic)",
-      summary: "섬세하고 분석적이며 완벽을 추구하는 기질입니다.",
-      details: [
+      "rose",
+    ),
+    melancholic: resultWithSections(
+      "melancholic",
+      "우울질(Melancholic)",
+      "섬세하고 분석적이며 완벽을 추구하는 기질입니다. 깊이와 의미를 중시합니다.",
+      [
         "깊이 생각하고 계획합니다.",
         "예술·철학적 감수성이 있습니다.",
         "비판에 민감할 수 있어요.",
       ],
-      color: "sky",
-    },
-    phlegmatic: {
-      id: "phlegmatic",
-      title: "점액질(Phlegmatic)",
-      summary: "차분하고 안정적이며 조화를 중시하는 기질입니다.",
-      details: [
+      "sky",
+    ),
+    phlegmatic: resultWithSections(
+      "phlegmatic",
+      "점액질(Phlegmatic)",
+      "차분하고 안정적이며 조화를 중시하는 기질입니다. 팀의 접착제 역할을 합니다.",
+      [
         "갈등을 피하고 중재 역할을 합니다.",
         "꾸준하고 신뢰감이 있습니다.",
         "변화에 느리게 반응할 수 있어요.",
       ],
-      color: "emerald",
-    },
+      "emerald",
+    ),
   },
   scoring: {
     strategy: "pattern",

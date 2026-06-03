@@ -19,6 +19,8 @@ export type TestResultBucket = {
   title: string;
   summary: string;
   details: string[];
+  /** 상세 다단락 리포트 (신한라이프 스타일) */
+  sections?: import("@/lib/report-types").ReportSection[];
   color: "emerald" | "sky" | "amber" | "rose" | "zinc";
 };
 

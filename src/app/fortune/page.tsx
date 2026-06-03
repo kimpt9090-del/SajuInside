@@ -5,7 +5,7 @@ import { FortuneClient } from "./FortuneClient";
 export const metadata: Metadata = {
   title: "사주/만세력 | 테스트/사주/유형",
   description:
-    "생년월일시와 성별을 입력해 사주 팔자(년·월·일·시주)를 확인합니다.",
+    "생년월일시로 사주 팔자를 계산하고, 성격·오행·직업·재물·연애·건강·2026년 운세까지 상세 풀이를 제공합니다.",
 };
 
 export default function FortunePage() {
@@ -17,8 +17,9 @@ export default function FortunePage() {
           사주 팔자 보기
         </h1>
         <p className="mt-2 text-sm leading-6 text-zinc-600">
-          생년월일시를 입력하면 천간·지지 8글자(년·월·일·시주)를 계산합니다.
-          정밀 만세력은 절기·음력 변환 라이브러리 연동을 권장합니다.
+          생년월일시를 입력하면 사주 팔자(년·월·일·시주)와 함께, 일간 기반
+          상세 풀이(성격·오행·직업·재물·연애·건강·2026년 운)를 확인할 수
+          있습니다.
         </p>
       </header>
 

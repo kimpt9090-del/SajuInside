@@ -9,6 +9,7 @@ import { ResultChart } from "@/components/test/ResultChart";
 import { ShareButtons } from "@/components/test/ShareButtons";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { ResultFeedback } from "@/components/feedback/ResultFeedback";
+import { DetailedReportSections } from "@/components/report/DetailedReportSections";
 import { hasChartData } from "@/lib/chart-data";
 import {
   getCategoryBasePath,
@@ -169,6 +170,20 @@ export function ResultClient({ test }: { test: TestDefinition }) {
             </ul>
           ) : null}
         </section>
+
+        {result?.sections?.length ? (
+          <section className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
+            <h2 className="text-lg font-semibold text-zinc-900">
+              상세 분석 리포트
+            </h2>
+            <p className="mt-1 text-sm text-zinc-600">
+              성격·직업·연애·성장 가이드까지 — 섹션별로 펼쳐 읽어보세요.
+            </p>
+            <div className="mt-5">
+              <DetailedReportSections sections={result.sections} />
+            </div>
+          </section>
+        ) : null}
 
         {showChart ? (
           <section className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">

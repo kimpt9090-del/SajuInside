@@ -1,4 +1,8 @@
 import type { TestResultBucket } from "../types";
+import {
+  getMbtiExtendedSummary,
+  getMbtiReportSections,
+} from "../reports/mbti-reports";
 
 const MBTI_TYPES = [
   "INTJ",
@@ -178,11 +182,13 @@ export function buildMbtiResults(): Record<string, TestResultBucket> {
   const results: Record<string, TestResultBucket> = {};
   MBTI_TYPES.forEach((code, i) => {
     const meta = SUMMARIES[code];
+    const extended = getMbtiExtendedSummary(code);
     results[code] = {
       id: code,
       title: meta.title,
-      summary: meta.summary,
+      summary: extended || meta.summary,
       details: meta.details,
+      sections: getMbtiReportSections(code),
       color: COLORS[i % COLORS.length],
     };
   });

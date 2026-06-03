@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useSyncExternalStore } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useSyncExternalStore,
+} from "react";
 
 type Theme = "light" | "dark" | "system";
 
@@ -44,7 +50,6 @@ function subscribeTheme(onStoreChange: () => void) {
     applyTheme(getStoredTheme());
     onStoreChange();
   };
-  applyTheme(getStoredTheme());
   mq.addEventListener("change", handler);
   window.addEventListener("storage", handler);
   return () => {
@@ -54,11 +59,21 @@ function subscribeTheme(onStoreChange: () => void) {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const theme = useSyncExternalStore(
+  const [ready, setReady] = useState(false);
+
+  const storedTheme = useSyncExternalStore(
     subscribeTheme,
     getStoredTheme,
     (): Theme => "system",
   );
+
+  // hydration: 서버·첫 클라이언트 페인트는 동일하게 "system"
+  const theme = ready ? storedTheme : "system";
+
+  useEffect(() => {
+    applyTheme(getStoredTheme());
+    queueMicrotask(() => setReady(true));
+  }, []);
 
   function setTheme(next: Theme) {
     try {
@@ -85,6 +100,7 @@ export function useTheme() {
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
+
   const cycle = () => {
     const order: Theme[] = ["light", "dark", "system"];
     const i = order.indexOf(theme);

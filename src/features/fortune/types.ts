@@ -1,3 +1,5 @@
+import type { DetailedReport } from "@/lib/report-types";
+
 export type Gender = "male" | "female";
 
 export type CalendarType = "solar" | "lunar";
@@ -30,4 +32,6 @@ export type SajuResult = {
   };
   summary: string;
   note: string;
+  /** 상세 해석 리포트 (interpretFortune으로 생성) */
+  report?: DetailedReport;
 };

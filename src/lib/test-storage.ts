@@ -55,6 +55,11 @@ export function loadTestProgress(testId: string): TestProgress | null {
     }
     return parsed;
   } catch {
+    try {
+      sessionStorage.removeItem(progressKey(testId));
+    } catch {
+      // ignore
+    }
     return null;
   }
 }

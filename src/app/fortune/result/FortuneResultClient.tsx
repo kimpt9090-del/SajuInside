@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { calculateSaju } from "@/features/fortune/calculator";
+import { calculateSajuWithReport } from "@/features/fortune/calculator";
 import type { BirthInput, SajuResult } from "@/features/fortune/types";
 import { SajuPillars } from "@/components/fortune/SajuPillars";
+import { DetailedReportSections } from "@/components/report/DetailedReportSections";
 import { ShareButtons } from "@/components/test/ShareButtons";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { ResultFeedback } from "@/components/feedback/ResultFeedback";
@@ -29,7 +30,7 @@ export function FortuneResultClient() {
         const raw = sessionStorage.getItem("fortune:birth");
         if (raw) {
           const input = JSON.parse(raw) as BirthInput;
-          computed = calculateSaju(input);
+          computed = calculateSajuWithReport(input);
         }
       } catch {
         // ignore
@@ -63,7 +64,7 @@ export function FortuneResultClient() {
     return (
       <LoadingSpinner
         message="사주를 풀고 있어요"
-        subMessage="천간·지지를 계산하는 중입니다"
+        subMessage="천간·지지와 운세를 분석하는 중입니다"
       />
     );
   }
@@ -93,6 +94,8 @@ export function FortuneResultClient() {
     `${result.pillars.day.stemHanja}${result.pillars.day.branchHanja}` +
     `${result.pillars.hour.stemHanja}${result.pillars.hour.branchHanja}`;
 
+  const report = result.report;
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -107,21 +110,52 @@ export function FortuneResultClient() {
         >
           <p className="text-sm font-semibold text-amber-900">사주 팔자</p>
           <p className="mt-1 text-sm text-zinc-600">{result.summary}</p>
+          {report ? (
+            <>
+              <h1 className="mt-4 text-xl font-bold text-zinc-900 sm:text-2xl">
+                {report.headline}
+              </h1>
+              {report.subheadline ? (
+                <p className="mt-1 text-sm text-zinc-600">
+                  {report.subheadline}
+                </p>
+              ) : null}
+            </>
+          ) : null}
           <p className="mt-4 text-center text-3xl font-bold tracking-widest text-zinc-900 sm:text-4xl">
             {eight.match(/.{1,2}/g)?.join(" ")}
           </p>
           <div className="mt-6">
             <SajuPillars result={result} />
           </div>
-          <p className="mt-4 text-xs leading-5 text-zinc-500">{result.note}</p>
         </section>
+
+        {report?.sections?.length ? (
+          <section className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
+            <h2 className="text-lg font-semibold text-zinc-900">
+              상세 사주 풀이
+            </h2>
+            <p className="mt-1 text-sm text-zinc-600">
+              성격·오행·직업·재물·연애·건강·2026년 운세까지 — 신한라이프
+              스타일의 맞춤 해석입니다.
+            </p>
+            <div className="mt-5">
+              <DetailedReportSections
+                sections={report.sections}
+                defaultOpenCount={2}
+              />
+            </div>
+          </section>
+        ) : (
+          <p className="text-xs leading-5 text-zinc-500">{result.note}</p>
+        )}
 
         <section className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
           <p className="text-sm font-semibold text-zinc-900">공유</p>
           <div className="mt-4">
             <ShareButtons
               title="사주/만세력 결과"
-              text={`내 사주: ${eight}`}
+              text={`내 사주: ${eight}${report ? ` · ${report.headline}` : ""}`}
               captureTargetId={captureId}
             />
           </div>

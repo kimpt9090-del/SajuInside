@@ -1,4 +1,5 @@
 import type { BirthInput, Pillar, SajuResult } from "./types";
+import { interpretFortune } from "./interpreter";
 
 /** 천간 10, 지지 12 (한글·한자) */
 const STEMS = [
@@ -129,4 +130,10 @@ export function calculateSaju(input: BirthInput): SajuResult {
     note:
       "본 결과는 절기·음력 변환 없이 계산한 근사값입니다. 정확한 만세력은 전문 만세력 API/라이브러리 연동을 권장합니다.",
   };
+}
+
+/** 팔자 계산 + 상세 해석 포함 */
+export function calculateSajuWithReport(input: BirthInput): SajuResult {
+  const base = calculateSaju(input);
+  return { ...base, report: interpretFortune(base) };
 }

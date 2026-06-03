@@ -6,7 +6,7 @@ export const mbtiTest: TestDefinition = {
   category: "types",
   title: "MBTI 성격 유형 검사",
   description:
-    "E/I, S/N, T/F, J/P 4가지 축의 응답 패턴으로 16가지 유형을 추정합니다.",
+    "E/I, S/N, T/F, J/P 4가지 축으로 16가지 유형을 분석하고, 직업·연애·성장 가이드까지 상세히 제공합니다.",
   version: 1,
   questions: [
     { id: "q1", text: "모임이 끝나면 사람들과 더 이야기하고 싶다." },
