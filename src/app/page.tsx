@@ -1,7 +1,13 @@
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { CategoryCard } from "@/components/home/CategoryCard";
-import { ContinueTests } from "@/components/home/ContinueTests";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+
+const ContinueTests = dynamic(
+  () =>
+    import("@/components/home/ContinueTests").then((m) => m.ContinueTests),
+  { ssr: false },
+);
 
 export default function Home() {
   return (
