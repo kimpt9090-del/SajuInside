@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   reactStrictMode: true,
+  // 로컬 상위 폴더 lockfile 오탐 방지 (Vercel 빌드에는 영향 없음)
   turbopack: {
     root: process.cwd(),
   },
