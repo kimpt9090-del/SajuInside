@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import {
   discardTestProgress,
   listInProgressTests,
@@ -24,6 +24,12 @@ function getProgressSnapshot(): TestProgress[] {
 }
 
 export function ContinueTests() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    queueMicrotask(() => setMounted(true));
+  }, []);
+
   const items = useSyncExternalStore(
     subscribeProgress,
     getProgressSnapshot,
@@ -35,7 +41,8 @@ export function ContinueTests() {
     window.dispatchEvent(new Event("storage"));
   }
 
-  if (items.length === 0) return null;
+  // sessionStorage는 서버에 없음 → 마운트 전에는 렌더하지 않아 hydration 오류 방지
+  if (!mounted || items.length === 0) return null;
 
   return (
     <section className="card-surface mb-8 border-violet-300/50 bg-gradient-to-b from-violet-50 to-card dark:from-violet-950/40 dark:to-card">

@@ -7,8 +7,17 @@ function readPublic(name: string, fallback = ""): string {
   return typeof v === "string" && v.length > 0 ? v : fallback;
 }
 
+function normalizeSiteUrl(raw: string): string {
+  const trimmed = raw.trim();
+  if (!trimmed) return "";
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    return trimmed.replace(/\/$/, "");
+  }
+  return `https://${trimmed.replace(/\/$/, "")}`;
+}
+
 function defaultSiteUrl(): string {
-  const explicit = readPublic("NEXT_PUBLIC_SITE_URL");
+  const explicit = normalizeSiteUrl(readPublic("NEXT_PUBLIC_SITE_URL"));
   if (explicit) return explicit;
   const vercel = process.env.VERCEL_URL;
   if (vercel) return `https://${vercel}`;
@@ -27,3 +36,11 @@ export const publicEnv = {
   firebaseProjectId: readPublic("NEXT_PUBLIC_FIREBASE_PROJECT_ID"),
   firebaseApiKey: readPublic("NEXT_PUBLIC_FIREBASE_API_KEY"),
 } as const;
+
+export function getMetadataBaseUrl(): URL {
+  try {
+    return new URL(publicEnv.siteUrl);
+  } catch {
+    return new URL("http://localhost:3000");
+  }
+}

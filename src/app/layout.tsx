@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
-import { publicEnv } from "@/lib/env";
+import { getMetadataBaseUrl } from "@/lib/env";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   },
   description:
     "심리 테스트, 사주/운세, MBTI·성격 유형 검사를 한 곳에서 즐기는 반응형 플랫폼",
-  metadataBase: new URL(publicEnv.siteUrl),
+  metadataBase: getMetadataBaseUrl(),
   openGraph: {
     locale: "ko_KR",
     type: "website",
