@@ -1,4 +1,7 @@
 import type { ReportSection } from "@/lib/report-types";
+import { getMbtiMarriageSection } from "./mbti-marriage";
+import { appendMbtiExtras } from "./report-extras";
+import { getQuickSummarySection } from "./quick-summary";
 
 type MbtiMeta = {
   code: string;
@@ -17,7 +20,7 @@ const TYPES: Record<string, MbtiMeta> = {
     code: "INTJ",
     nickname: "전략가",
     overview: [
-      "INTJ는 Introversion·Intuition·Thinking·Judging의 조합으로, 큰 그림을 그리고 체계적으로 목표를 설계하는 전략가형입니다. 독립적이며 원칙과 효율을 중시하고, 감정보다 논리와 장기 계획에 강점이 있습니다.",
+      "INTJ는 내향·직관·사고·판단의 조합으로, 큰 그림을 그리고 체계적으로 목표를 설계하는 전략가형입니다. 독립적이며 원칙과 효율을 중시하고, 감정보다 논리와 장기 계획에 강점이 있습니다.",
       "세상의 비효율·비논리에 인내심이 낮고, '왜 이렇게 하지?'라고 끊임없이 개선하려 합니다. 혼자 집중할 시간이 필요하며, 소수와 깊은 관계를 선호합니다.",
     ],
     strengths: ["전략·장기 계획", "독립·자기주도", "논리·분석", "원칙·일관성", "위기 시 침착"],
@@ -53,7 +56,7 @@ const TYPES: Record<string, MbtiMeta> = {
       "친밀감: 갑작스런 감정 요구에 부담",
       "성장: '지금 기분' 한 문장 말하기",
     ],
-    growth: ["TODO·마감 외부화", "몸·감정 체크 루틴", "한 아이디어 끝까지 MVP"],
+    growth: ["마감 외부화·위임", "몸·감정 체크 루틴", "한 아이디어 끝까지 완료"],
     famous: "앨버트 아인슈타인, 빌 게이츠 (유형 추정)",
   },
   ENTJ: {
@@ -80,7 +83,7 @@ const TYPES: Record<string, MbtiMeta> = {
       "ENTP는 새 가능성·토론·실험에 에너지를 얻는 변론가형입니다. 창의적이고 루틴보다 변화·도전을 선호합니다.",
       "여러 아이디어를 동시에 다루며, '악마의 변호인' 역할을 즐기기도 합니다. 마무리·세부는 파트너에게.",
     ],
-    strengths: ["창의·브레인storm", "적응·유연", "설득·유머", "위기 아이디어", "네트워킹"],
+    strengths: ["창의·아이디어 회의", "적응·유연", "설득·유머", "위기 아이디어", "네트워킹"],
     weaknesses: ["지속·마감", "규칙·권위 거부", "논쟁 중독", "감정 깊이"],
     career: {
       intro: "창업·마케팅·기획·변호·저널리즘·UX·컨설팅.",
@@ -105,7 +108,7 @@ const TYPES: Record<string, MbtiMeta> = {
     },
     love: ["연애: 깊이·진정성·미래", "상처: 배신·가치 무시", "휴식·경계 필수"],
     growth: ["NO 연습", "현실적 목표", "자기 돌봄 일정"],
-    famous: "마더 테레사, 일반 드 Gaulle (유형 추정)",
+    famous: "마더 테레사, 샤를 드 골 (유형 추정)",
   },
   INFP: {
     code: "INFP",
@@ -122,13 +125,13 @@ const TYPES: Record<string, MbtiMeta> = {
     },
     love: ["연애: 로맨스·가치 일치", "상처: 가치 부정", "표현: 편지·예술"],
     growth: ["작은 마감·루틴", "수입·현실 계획", "비판 필터"],
-    famous: "J.R.R. 토lkien, 윌iam Shakespeare (유형 추정)",
+    famous: "톨킨, 셰익스피어 (유형 추정)",
   },
   ENFJ: {
     code: "ENFJ",
     nickname: "선도자",
     overview: [
-      "ENFJ는 타인 성장·관계 조율·공동체 화합을 이끄는 선도자형입니다. 따뜻·설득·비전으로 사람을 mobilize합니다.",
+      "ENFJ는 타인 성장·관계 조율·공동체 화합을 이끄는 선도자형입니다. 따뜻·설득·비전으로 사람을 이끌어냅니다.",
       "타인 필요를 먼저 챙기다 지칠 수 있어, 자기 돌봄·거절이 중요합니다.",
     ],
     strengths: ["리더십·공감", "소통·설득", "조직·멘토링", "비전·열정", "협력"],
@@ -139,7 +142,7 @@ const TYPES: Record<string, MbtiMeta> = {
     },
     love: ["연애: 성장·대화·미래", "배우자·자녀 헌신", "거절·휴식"],
     growth: ["주 1회 나만의 시간", "완벽한 리더 아님 OK"],
-    famous: "버락 오바마, 오프라 윈frey (유형 추정)",
+    famous: "버락 오바마, 오프라 윈프리 (유형 추정)",
   },
   ENFP: {
     code: "ENFP",
@@ -148,7 +151,7 @@ const TYPES: Record<string, MbtiMeta> = {
       "ENFP는 열정·사람·가능성에 에너지를 얻는 활동가형입니다. 자유·상상력·새 경험·관계에서 동기, 루틴에 지루함.",
       "아이디어·사람 연결에 강하고, 진정성·의미를 중시합니다.",
     ],
-    strengths: ["열정·카리스마", "창의·브레인storm", "공감·네트워크", "적응·낙관", "영감"],
+    strengths: ["열정·카리스마", "창의·아이디어 회의", "공감·네트워크", "적응·낙관", "영감"],
     weaknesses: ["집중·마감", "감정 기복", "과약속", "깊이 vs 넓이"],
     career: {
       intro: "기획·마케팅·방송·교육·창업·상담·예술.",
@@ -156,7 +159,7 @@ const TYPES: Record<string, MbtiMeta> = {
     },
     love: ["연애: 로맨스·성장·자유", "지루함 주의", "꾸준한 작은 약속"],
     growth: ["한 목표 90일", "재무·일정 도구", "깊은 1:1 시간"],
-    famous: "로버트 다우니 주니어, Will Smith (유형 추정)",
+    famous: "로버트 다우니 주니어, 윌 스미스 (유형 추정)",
   },
   ISTJ: {
     code: "ISTJ",
@@ -190,7 +193,7 @@ const TYPES: Record<string, MbtiMeta> = {
     },
     love: ["연애: 헌신·가정·기념일", "감사 표현 필요", "자기 욕구 말하기"],
     growth: ["NO·휴식", "승진 표현", "변화 작게 시작"],
-    famous: "케이트 미들턴, Mother Teresa (유형 추정)",
+    famous: "케이트 미들턴, 마더 테레사 (유형 추정)",
   },
   ESTJ: {
     code: "ESTJ",
@@ -207,7 +210,7 @@ const TYPES: Record<string, MbtiMeta> = {
     },
     love: ["연애: 책임·가정·역할", "듣기·칭찬", "규칙 vs 감정 균형"],
     growth: ["감정 인정 5초", "위임", "비공식 대화"],
-    famous: "Henry Ford, Judge Judy (유형 추정)",
+    famous: "헨리 포드, 저디 판사 (유형 추정)",
   },
   ESFJ: {
     code: "ESFJ",
@@ -224,7 +227,7 @@ const TYPES: Record<string, MbtiMeta> = {
     },
     love: ["연애: 로맨스·가족·기념", "상대 기대 관리", "자기 욕구"],
     growth: ["비판=성장", "혼자 시간", "장기 목표 1개"],
-    famous: "Taylor Swift, Jennifer Garner (유형 추정)",
+    famous: "테일러 스위프트, 제니퍼 가너 (유형 추정)",
   },
   ISTP: {
     code: "ISTP",
@@ -236,12 +239,12 @@ const TYPES: Record<string, MbtiMeta> = {
     strengths: ["문제해결", "침착·위기", "손기술", "적응", "객관"],
     weaknesses: ["감정·장기 계획", "약속", "규칙·회의", "표현"],
     career: {
-      intro: "엔지니어·정비·외과·스포츠·IT·법의·파ilot.",
-      fields: ["기계·전기", "개발·DevOps", "응급·외과", "경찰·특수"],
+      intro: "엔지니어·정비·외과·스포츠·IT·법의·파일럿.",
+      fields: ["기계·전기", "개발·운영", "응급·외과", "경찰·특수"],
     },
     love: ["연애: 함께 활동·자유", "말보다 행동", "감정 요구 천천히"],
     growth: ["감정 라벨링", "장기 목표 1개", "약속 캘린더"],
-    famous: "클린트 이astwood, Michael Jordan (유형 추정)",
+    famous: "클린트 이스트우드, 마이클 조던 (유형 추정)",
   },
   ISFP: {
     code: "ISFP",
@@ -258,7 +261,7 @@ const TYPES: Record<string, MbtiMeta> = {
     },
     love: ["연애: 로맨스·경험·존중", "압박 싫음", "가치 충돌 시 거리"],
     growth: ["재정·일정 최소 루틴", "NO 연습", "스트레스 표현"],
-    famous: "Michael Jackson, Frida Kahlo (유형 추정)",
+    famous: "마이클 잭슨, 프리다 칼로 (유형 추정)",
   },
   ESTP: {
     code: "ESTP",
@@ -275,13 +278,13 @@ const TYPES: Record<string, MbtiMeta> = {
     },
     love: ["연애: 재미·활동·자유", "지루함=이탈", "장기 약속 관리"],
     growth: ["저축·보험 자동화", "한 관계 깊이", "위험 한도"],
-    famous: "Donald Trump, Madonna (유형 추정)",
+    famous: "도널드 트럼프, 마돈나 (유형 추정)",
   },
   ESFP: {
     code: "ESFP",
     nickname: "연예인",
     overview: [
-      "ESFP는 밝·즉흥·분위기·경험을 살리는 연예인형입니다. 사교·표현·즐거움·현재, 계획보다 흐름.",
+      "ESFP는 밝고 즉흥적으로 분위기를 살리는 연예인형입니다. 사교·표현·즐거움·현재, 계획보다 흐름.",
       "사람 좋아하고, 무대·파티·여행에서 에너지.",
     ],
     strengths: ["표현·사교", "낙관·에너지", "적응·즉흥", "공감·분위기", "현실"],
@@ -292,7 +295,7 @@ const TYPES: Record<string, MbtiMeta> = {
     },
     love: ["연애: 로맨스·이벤트·표현", "꾸준함 연습", "재정·미래 대화"],
     growth: ["적립 자동이체", "깊은 대화 시간", "디지털·과소비"],
-    famous: "Marilyn Monroe, Jamie Foxx (유형 추정)",
+    famous: "마릴린 먼로, 제이미 폭스 (유형 추정)",
   },
 };
 
@@ -331,6 +334,10 @@ function buildSections(m: MbtiMeta): ReportSection[] {
       bullets: m.love,
       tags: ["#연애"],
     },
+    ...((): ReportSection[] => {
+      const marriage = getMbtiMarriageSection(m.code);
+      return marriage ? [marriage] : [];
+    })(),
     {
       id: "growth",
       title: "성장·발전 가이드",
@@ -357,7 +364,9 @@ function buildSections(m: MbtiMeta): ReportSection[] {
 export function getMbtiReportSections(code: string): ReportSection[] {
   const m = TYPES[code];
   if (!m) return [];
-  return buildSections(m);
+  const quick = getQuickSummarySection("mbti", code);
+  const base = quick ? [quick, ...buildSections(m)] : buildSections(m);
+  return appendMbtiExtras(code, base);
 }
 
 export function getMbtiExtendedSummary(code: string): string {

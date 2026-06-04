@@ -1,4 +1,6 @@
 import type { ReportSection } from "@/lib/report-types";
+import { appendTemperamentExtras } from "./report-extras";
+import { getQuickSummarySection } from "./quick-summary";
 
 type TemperamentId = "sanguine" | "choleric" | "melancholic" | "phlegmatic";
 
@@ -32,7 +34,7 @@ const REPORTS: Record<TemperamentId, ReportSection[]> = {
       title: "직업·커리어 적성",
       paragraphs: [
         "영업·마케팅·방송·교육·이벤트·F&B·여행·서비스 등 '사람·표현·즐거움'이 핵심인 분야에 강합니다. 반복·고독·세부 숫자만 다루는 업무는 지루함을 느낄 수 있습니다.",
-        "리더가 되면 분위기와 동기부여는 뛰어나나, 세부 실행·문서·마감은 부하에게 위임하거나 체크리스트·PM과 협업하세요.",
+        "리더가 되면 분위기와 동기부여는 뛰어나나, 세부 실행·문서·마감은 부하에게 위임하거나 체크리스트·프로젝트 매니저와 협업하세요.",
       ],
       bullets: [
         "추천: MC·진행, 영업, 마케터, 강사, 기획·이벤트, 호스트",
@@ -230,5 +232,7 @@ const REPORTS: Record<TemperamentId, ReportSection[]> = {
 };
 
 export function getTemperamentReportSections(id: string): ReportSection[] {
-  return REPORTS[id as TemperamentId] ?? [];
+  const base = REPORTS[id as TemperamentId] ?? [];
+  const quick = getQuickSummarySection("temperament", id);
+  return appendTemperamentExtras(id, quick ? [quick, ...base] : base);
 }

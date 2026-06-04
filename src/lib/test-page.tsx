@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import {
@@ -8,12 +7,9 @@ import {
 } from "@/features/tests/registry";
 import type { TestCategory } from "@/features/tests/types";
 import { buildTestMetadata } from "@/lib/metadata";
-import {
-  getCategoryBasePath,
-  testRunPath,
-} from "@/lib/test-paths";
 import { TestRunner } from "@/components/test/TestRunner";
 import { ResultClient } from "@/components/test/ResultClient";
+import { TestIntroPanel } from "@/components/test/TestIntroPanel";
 
 type Params = { testId: string };
 
@@ -48,27 +44,7 @@ export function TestStartPage({ params }: { params: Params }) {
         <p className="mt-2 text-sm leading-6 text-zinc-600">{test.description}</p>
       </header>
 
-      <section className="card-surface mt-6">
-        <ul className="space-y-1 text-sm text-muted-foreground">
-          <li>• 문항 수: {test.questions.length}개</li>
-          <li>• 5점 척도 (매우 그렇다 ~ 매우 아니다)</li>
-          <li>• 결과 그래프 · 공유 · 이미지 저장</li>
-        </ul>
-        <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-          <Link
-            href={testRunPath(test.category, test.id)}
-            className="btn-primary"
-          >
-            시작하기
-          </Link>
-          <Link
-            href={getCategoryBasePath(test.category)}
-            className="btn-secondary"
-          >
-            목록으로
-          </Link>
-        </div>
-      </section>
+      <TestIntroPanel test={test} />
     </div>
   );
 }

@@ -1,10 +1,16 @@
-import type { Metadata } from "next";
 import { FortuneResultClient } from "./FortuneResultClient";
+import { buildSajuResultMetadata } from "@/lib/fortune-share-metadata";
+import { SHARE_PARAM } from "@/lib/share-url";
 
-export const metadata: Metadata = {
-  title: "사주 결과 | 테스트/사주/유형",
-  description: "입력한 생년월일시 기반 사주 팔자(천간·지지) 결과",
+type Props = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
+
+export async function generateMetadata({ searchParams }: Props) {
+  const sp = await searchParams;
+  const r = typeof sp[SHARE_PARAM] === "string" ? sp[SHARE_PARAM] : undefined;
+  return buildSajuResultMetadata(r);
+}
 
 export default function FortuneResultPage() {
   return (

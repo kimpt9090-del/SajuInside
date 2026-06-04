@@ -1,0 +1,17 @@
+{
+  "name": "테스트/사주/유형",
+  "short_name": "테스트사주",
+  "description": "MBTI·심리검사·사주·궁합·전생 통합 플랫폼",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#18181b",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

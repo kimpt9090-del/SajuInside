@@ -1,5 +1,7 @@
 "use client";
 
+import "./globals.css";
+
 export default function GlobalError({
   error,
   reset,
@@ -18,7 +20,7 @@ export default function GlobalError({
           <button
             type="button"
             onClick={reset}
-            className="mt-6 rounded-xl bg-zinc-900 px-4 py-3 text-sm font-semibold text-white"
+            className="btn-primary mt-6"
           >
             다시 시도
           </button>

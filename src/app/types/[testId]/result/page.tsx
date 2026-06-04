@@ -1,18 +1,24 @@
 import {
   TestResultPage,
-  generateTestMetadata,
   generateCategoryTestStaticParams,
 } from "@/lib/test-page";
+import { buildResultShareMetadata } from "@/lib/result-share-metadata";
+import { SHARE_PARAM } from "@/lib/share-url";
 
 export function generateStaticParams() {
   return generateCategoryTestStaticParams("types");
 }
 
-type Props = { params: Promise<{ testId: string }> };
+type Props = {
+  params: Promise<{ testId: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params, searchParams }: Props) {
   const { testId } = await params;
-  return generateTestMetadata(testId);
+  const sp = await searchParams;
+  const r = typeof sp[SHARE_PARAM] === "string" ? sp[SHARE_PARAM] : undefined;
+  return buildResultShareMetadata(testId, r);
 }
 
 export default async function Page({ params }: Props) {

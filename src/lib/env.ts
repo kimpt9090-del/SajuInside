@@ -26,7 +26,6 @@ function defaultSiteUrl(): string {
 
 export const publicEnv = {
   siteUrl: defaultSiteUrl(),
-  kakaoJsKey: readPublic("NEXT_PUBLIC_KAKAO_JS_KEY"),
   dbProvider: readPublic("NEXT_PUBLIC_DB_PROVIDER", "local") as
     | "local"
     | "supabase"

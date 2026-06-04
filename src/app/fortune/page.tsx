@@ -17,11 +17,20 @@ export default function FortunePage() {
           사주 팔자 보기
         </h1>
         <p className="mt-2 text-sm leading-6 text-zinc-600">
-          생년월일시를 입력하면 사주 팔자(년·월·일·시주)와 함께, 일간 기반
-          상세 풀이(성격·오행·직업·재물·연애·건강·2026년 운)를 확인할 수
+          생년월일시를 입력하면 사주 팔자(년·월·일·시주)와 함께, 만세력·한자
+          해석·오늘/주간/월간 운세(이성·진로·금전)·상세 풀이를 확인할 수
           있습니다.
         </p>
       </header>
+
+      <nav className="mt-4 flex flex-wrap gap-2">
+        <Link href="/fortune" className="btn-primary text-xs">
+          사주 보기
+        </Link>
+        <Link href="/fortune/compatibility" className="btn-secondary text-xs">
+          궁합 보기
+        </Link>
+      </nav>
 
       <div className="mt-6">
         <FortuneClient />

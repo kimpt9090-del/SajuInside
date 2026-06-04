@@ -1,4 +1,6 @@
 import type { ReportSection } from "@/lib/report-types";
+import { appendAttachmentExtras } from "./report-extras";
+import { getQuickSummarySection } from "./quick-summary";
 
 type AttachmentId = "secure" | "anxious" | "avoidant";
 
@@ -7,12 +9,13 @@ const REPORTS: Record<AttachmentId, ReportSection[]> = {
     {
       id: "overview",
       title: "애착 유형 종합 해석",
-      subtitle: "안정형(Secure Attachment)",
+      subtitle: "안정형 애착",
       highlight:
         "친밀감과 독립의 균형이 비교적 잘 잡혀 있어, 관계에서 안정감과 성장을 동시에 경험하는 타입입니다.",
       paragraphs: [
         "애착 이론에서 '안정형'은 어린 시절부터 보호자로부터 일관된 돌봄을 받았거나, 성장 과정에서 관계에 대한 긍정적 신념을 형성한 경우가 많습니다. 상대가 곁에 있을 때 편안함을 느끼고, 혼자일 때도 자존감을 유지합니다.",
         "연애·우정·직장 관계 모두에서 '신뢰'를 기본값으로 두며, 갈등이 생겨도 관계 전체가 무너질 것이라고 극단적으로 해석하지 않습니다. 상대의 필요와 자신의 필요를 모두 존중하려는 태도가 두드러집니다.",
+        "안정형은 완벽한 유형이 아닙니다. 스트레스·상실·배신을 겪으면 누구나 흔들릴 수 있으나, 회복력과 '관계 수리' 능력이 비교적 빠른 편입니다. 상대가 불안형·회피형일 때는 그들의 패턴을 개인 공격이 아닌 '애착 상처'로 이해하면 관계가 깊어집니다.",
       ],
       tags: ["#애착", "#안정형"],
     },
@@ -65,12 +68,12 @@ const REPORTS: Record<AttachmentId, ReportSection[]> = {
     {
       id: "overview",
       title: "애착 유형 종합 해석",
-      subtitle: "불안형(Anxious Attachment)",
+      subtitle: "불안형 애착",
       highlight:
         "사랑받고 싶은 마음이 크고, 관계에서 '확신'과 '안정 신호'를 자주 필요로 하는 타입입니다.",
       paragraphs: [
         "불안형은 상대의 사랑·관심에 대한 갈증이 크고, 작은 변화(연락 지연, 표정 변화)에도 '나를 떠날까?' '싫어진 걸까?'라는 해석이 올라올 수 있습니다. 이는 '나쁜 사람'이라는 뜻이 아니라, 과거 경험에서 형성된 '관계 불안' 패턴입니다.",
-        "감정 표현이 풍부하고, 상대와의 친밀함을 깊게 원합니다. 다만 확인 행동(연락·SNS·질문 반복)이 늘면 상대에게 부담이 될 수 있어, 자기 조절·대화 규칙이 중요합니다.",
+        "감정 표현이 풍부하고, 상대와의 친밀함을 깊게 원합니다. 확인 행동(연락·메신저·질문 반복)이 늘면 상대에게 부담이 될 수 있어, '10분 멈춤 → 감정 이름 붙이기 → 대화 요청' 순서를 연습하면 관계가 안정됩니다.",
       ],
       tags: ["#애착", "#불안형"],
     },
@@ -111,7 +114,7 @@ const REPORTS: Record<AttachmentId, ReportSection[]> = {
       title: "성장·회복 가이드",
       highlight: "불안은 '사랑에 대한 욕구'의 다른 얼굴입니다. 자기 안정감을 키우면 관계도 건강해집니다.",
       bullets: [
-        "애착 상담·인지행동치료(CBT) 검토",
+        "애착 상담·인지행동치료 검토",
         "연애·결혼 전 '연락·갈등 규칙' 문서로 합의",
         "자기 가치: 취미·친구·일에서 '나만의 기쁨' 확보",
         "상대 변화 = 나에 대한 평가가 아님 — 반복 학습",
@@ -124,7 +127,7 @@ const REPORTS: Record<AttachmentId, ReportSection[]> = {
     {
       id: "overview",
       title: "애착 유형 종합 해석",
-      subtitle: "회피형(Avoidant Attachment)",
+      subtitle: "회피형 애착",
       highlight:
         "친밀해질수록 부담을 느끼고, 독립·자유·공간을 중요하게 여기는 타입입니다.",
       paragraphs: [
@@ -182,5 +185,7 @@ const REPORTS: Record<AttachmentId, ReportSection[]> = {
 };
 
 export function getAttachmentReportSections(id: string): ReportSection[] {
-  return REPORTS[id as AttachmentId] ?? [];
+  const base = REPORTS[id as AttachmentId] ?? [];
+  const quick = getQuickSummarySection("attachment", id);
+  return appendAttachmentExtras(id, quick ? [quick, ...base] : base);
 }

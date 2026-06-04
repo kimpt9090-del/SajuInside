@@ -1,35 +1,44 @@
 import Link from "next/link";
+
 import { getTestsByCategory } from "@/features/tests/registry";
+import { SiteHeader } from "@/components/layout/SiteHeader";
 import { testStartPath } from "@/lib/test-paths";
 
-export default function PsychologyIndexPage() {
+export const metadata = {
+  title: "심리 테스트",
+  description: "우울·불안 자가진단, 사이코패스 성향 참고 검사",
+};
+
+export default function PsychologyHubPage() {
   const tests = getTestsByCategory("psychology");
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-5 py-10">
-      <header>
-        <p className="text-sm font-medium text-zinc-500">심리 테스트</p>
-        <h1 className="mt-1 text-2xl font-semibold tracking-tight text-zinc-900">
-          테스트를 선택하세요
-        </h1>
-        <p className="mt-2 text-sm leading-6 text-zinc-600">
-          5점 척도 문항으로 진행되며, 결과 그래프/공유/캡처를 지원합니다.
+    <div className="flex flex-1 flex-col">
+      <SiteHeader
+        title="심리 테스트"
+        subtitle="자가 선별 · 진단 대체 불가 · 위기 연락처 안내"
+        actionHref="/psychology/depression/start"
+        actionLabel="우울 자가진단"
+      />
+      <main className="page-container mx-auto w-full max-w-3xl flex-1 px-5 pb-12">
+        <p className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100">
+          본 검사는 의료 진단이 아닙니다. 증상이 지속되면 전문가 상담을 권장합니다. 위기 시
+          1577-0199 · 1393 · 119
         </p>
-      </header>
-
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        {tests.map((t) => (
-          <Link
-            key={t.id}
-            href={testStartPath(t.category, t.id)}
-            className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-          >
-            <p className="text-sm font-semibold text-zinc-900">{t.title}</p>
-            <p className="mt-2 text-sm text-zinc-600">{t.description}</p>
-            <p className="mt-4 text-sm font-semibold text-zinc-900">시작하기 →</p>
-          </Link>
-        ))}
-      </div>
+        <ul className="space-y-3">
+          {tests.map((t) => (
+            <li key={t.id}>
+              <Link
+                href={testStartPath("psychology", t.id)}
+                className="card-surface block p-4 transition hover:border-rose-300"
+              >
+                <p className="font-semibold text-foreground">{t.title}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{t.description}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </main>
     </div>
   );
 }

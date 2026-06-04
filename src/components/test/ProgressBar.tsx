@@ -18,7 +18,7 @@ export function ProgressBar({
       </div>
       <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-zinc-100">
         <motion.div
-          className="h-full rounded-full bg-zinc-900"
+          className="h-full rounded-full bg-primary"
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
           transition={{ type: "spring", stiffness: 220, damping: 26 }}

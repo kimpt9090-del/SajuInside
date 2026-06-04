@@ -3,6 +3,7 @@ import {
   getMbtiExtendedSummary,
   getMbtiReportSections,
 } from "../reports/mbti-reports";
+import { getQuickSummary } from "../reports/quick-summary";
 
 const MBTI_TYPES = [
   "INTJ",
@@ -55,7 +56,7 @@ const SUMMARIES: Record<string, { title: string; summary: string; details: strin
     title: "ENTP — 변론가",
     summary: "새로운 가능성을 발견하고 도전하는 유형입니다.",
     details: [
-      "창의적이며 토론과 브레인스토밍을 즐깁니다.",
+      "창의적이며 토론과 아이디어 회의를 즐깁니다.",
       "루틴보다 변화와 실험에 에너지를 얻습니다.",
       "여러 아이디어를 동시에 다루는 편입니다.",
     ],
@@ -189,6 +190,7 @@ export function buildMbtiResults(): Record<string, TestResultBucket> {
       summary: extended || meta.summary,
       details: meta.details,
       sections: getMbtiReportSections(code),
+      quickSummary: getQuickSummary("mbti", code),
       color: COLORS[i % COLORS.length],
     };
   });

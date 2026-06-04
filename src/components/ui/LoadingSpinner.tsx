@@ -19,7 +19,7 @@ export function LoadingSpinner({
         {[0, 1, 2].map((i) => (
           <motion.span
             key={i}
-            className="absolute h-3 w-3 rounded-full bg-zinc-900"
+            className="absolute h-3 w-3 rounded-full bg-primary"
             animate={{
               scale: [0.6, 1.2, 0.6],
               opacity: [0.35, 1, 0.35],
@@ -36,7 +36,7 @@ export function LoadingSpinner({
           />
         ))}
         <motion.div
-          className="h-8 w-8 rounded-full border-2 border-zinc-200 border-t-zinc-900"
+          className="h-8 w-8 rounded-full border-2 border-border border-t-primary"
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
         />

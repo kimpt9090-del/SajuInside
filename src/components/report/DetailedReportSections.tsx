@@ -111,7 +111,7 @@ export function DetailedReportSections({
             {open ? (
               <div className="border-t border-border px-5 pb-5 pt-4">
                 {section.highlight ? (
-                  <p className="mb-4 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm font-medium leading-6 text-card-foreground">
+                  <p className="mb-4 rounded-xl bg-muted/80 px-4 py-3 text-sm font-medium leading-6 text-card-foreground">
                     {section.highlight}
                   </p>
                 ) : null}
@@ -132,7 +132,7 @@ export function DetailedReportSections({
                         key={i}
                         className="flex gap-2 text-sm leading-6 text-card-foreground/90"
                       >
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground/70" />
                         <span>{b}</span>
                       </li>
                     ))}

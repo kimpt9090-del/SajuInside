@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { AuthNav } from "@/components/layout/AuthNav";
 import { ThemeToggleSlot } from "@/components/layout/ThemeToggleSlot";
+import { FontSizeToggle } from "@/components/layout/FontSizeToggle";
 
 export function SiteHeader({
   title,
@@ -23,6 +25,14 @@ export function SiteHeader({
         </h1>
       </div>
       <div className="flex items-center gap-2">
+        <AuthNav />
+        <Link href="/my" className="btn-secondary hidden text-sm sm:inline-flex">
+          마이
+        </Link>
+        <Link href="/guide" className="btn-secondary hidden text-sm sm:inline-flex">
+          가이드
+        </Link>
+        <FontSizeToggle />
         <ThemeToggleSlot />
         {actionHref && actionLabel ? (
           <Link href={actionHref} className="btn-primary hidden sm:inline-flex">

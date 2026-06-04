@@ -1,4 +1,5 @@
 import type { DetailedReport } from "@/lib/report-types";
+import type { Element } from "./content/stems-branches";
 
 export type Gender = "male" | "female";
 
@@ -20,6 +21,12 @@ export type Pillar = {
   stemHanja: string;
   branchHanja: string;
   label: string;
+  /** 천간 해석 (한자+뜻) */
+  stemDesc?: string;
+  /** 지지 해석 (한자+뜻) */
+  branchDesc?: string;
+  stemElement?: Element;
+  branchElement?: Element;
 };
 
 export type SajuResult = {
@@ -32,6 +39,19 @@ export type SajuResult = {
   };
   summary: string;
   note: string;
-  /** 상세 해석 리포트 (interpretFortune으로 생성) */
   report?: DetailedReport;
+};
+
+export type CompatibilityInput = {
+  male: BirthInput;
+  female: BirthInput;
+};
+
+export type CompatibilityResult = {
+  male: SajuResult;
+  female: SajuResult;
+  score: number;
+  grade: string;
+  summary: string;
+  report: DetailedReport;
 };

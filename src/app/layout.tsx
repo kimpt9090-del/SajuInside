@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "@/components/layout/Providers";
+import { SiteFooter } from "@/components/layout/SiteFooter";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getMetadataBaseUrl } from "@/lib/env";
+import { SITE_NAME } from "@/lib/metadata";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,13 +25,19 @@ export const metadata: Metadata = {
     template: "%s | 테스트/사주/유형",
   },
   description:
-    "심리 테스트, 사주/운세, MBTI·성격 유형 검사를 한 곳에서 즐기는 반응형 플랫폼",
+    "MBTI·애착·에겐테토·우울·불안 자가진단, 사주·궁합·전생·만세력. 30초 요약과 상세 리포트, 공유 링크 지원.",
   metadataBase: getMetadataBaseUrl(),
+  alternates: { canonical: "/" },
+  manifest: "/manifest.json",
   openGraph: {
     locale: "ko_KR",
     type: "website",
-    siteName: "테스트/사주/유형",
+    siteName: SITE_NAME,
+    title: "테스트/사주/유형 - 통합 플랫폼",
+    description:
+      "심리 테스트, 사주/운세, MBTI·성격 유형 검사를 한 곳에서 즐기는 반응형 플랫폼",
   },
+  robots: { index: true, follow: true },
 };
 
 const themeScript = `
@@ -40,6 +49,8 @@ const themeScript = `
     var c=dark?'dark':'light';
     document.documentElement.classList.remove('light','dark');
     document.documentElement.classList.add(c);
+    var fs=localStorage.getItem('font-scale')||'100';
+    document.documentElement.style.setProperty('--font-scale', (Number(fs)/100).toString());
   } catch(e) {}
 })();
 `;
@@ -57,9 +68,13 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <JsonLd />
       </head>
       <body className="flex min-h-full flex-col bg-background text-foreground">
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <SiteFooter />
+        </Providers>
       </body>
     </html>
   );

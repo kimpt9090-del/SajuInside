@@ -20,14 +20,11 @@ export function Likert5Choices({
           <label
             key={c.value}
             className={[
-              "touch-target flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl border px-3 py-3 text-sm shadow-sm transition sm:px-4",
-              selected
-                ? "border-primary bg-primary text-primary-foreground"
-                : "border-border bg-card text-card-foreground hover:bg-muted",
+              "likert-choice touch-target",
+              selected ? "likert-choice--selected" : "",
             ].join(" ")}
           >
-            <span className="text-center font-semibold sm:hidden">{c.label}</span>
-            <span className="hidden text-center sm:inline">{c.label}</span>
+            <span className="text-center">{c.label}</span>
             <input
               className="sr-only"
               type="radio"

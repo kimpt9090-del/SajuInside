@@ -2,6 +2,9 @@ import type { DetailedReport, ReportSection } from "@/lib/report-types";
 import type { BirthInput, SajuResult } from "./types";
 import { countElements, describeElementBalance } from "./content/elements";
 import { getStemProfile } from "./content/stem-profiles";
+import { buildPeriodFortuneSections } from "./content/period-fortune";
+import { formatBranchLabel, formatStemLabel } from "./content/stems-branches";
+import { todayDayPillar } from "./pillar-calc";
 
 const BRANCH_TRAITS: Record<string, string> = {
   자: "지혜·유연·밤의 기운. 내면 깊고 적응력 있음.",
@@ -25,6 +28,55 @@ const YEAR_2026 = {
   theme: "2026년은 병화(丙火)와 오화(午火)가 겹치는 강한 화(火)의 해입니다. 열정·변화·대외 활동·명예·이동운이 강하게 작용합니다.",
 };
 
+function buildHanjaGuideSection(result: SajuResult): ReportSection {
+  const { pillars } = result;
+  const all = [pillars.hour, pillars.day, pillars.month, pillars.year];
+  const bullets = all.flatMap((p) => [
+    `[${p.label}] 천간 ${formatStemLabel(p.stem, p.stemHanja)}`,
+    `[${p.label}] 지지 ${formatBranchLabel(p.branch, p.branchHanja)}`,
+  ]);
+
+  return {
+    id: "hanja-guide",
+    title: "한자·천간지지 해석 가이드",
+    subtitle: "한자만 봐도 뜻을 알 수 있도록 풀어씁니다",
+    highlight: "천간(天干)은 하늘 기운·성격, 지지(地支)는 땅 기운·환경·관계를 나타냅니다.",
+    bullets,
+    tags: ["#한자", "#만세력"],
+  };
+}
+
+function buildManseryeokSection(result: SajuResult): ReportSection {
+  const today = todayDayPillar();
+  const { pillars, input } = result;
+  const eight =
+    `${pillars.year.stemHanja}${pillars.year.branchHanja}` +
+    `${pillars.month.stemHanja}${pillars.month.branchHanja}` +
+    `${pillars.day.stemHanja}${pillars.day.branchHanja}` +
+    `${pillars.hour.stemHanja}${pillars.hour.branchHanja}`;
+
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}년 ${now.getMonth() + 1}월 ${now.getDate()}일`;
+
+  return {
+    id: "manseryeok",
+    title: "만세력 (萬歲曆)",
+    subtitle: `${dateStr} 기준`,
+    highlight: `오늘 일진: ${today.stemHanja}${today.branchHanja} (${today.stem}${today.branch})`,
+    paragraphs: [
+      `귀하의 사주 팔자: ${eight.match(/.{1,2}/g)?.join(" ")}`,
+      `${input.year}년 ${input.month}월 ${input.day}일 ${input.hour}시생 — 시주·일주·월주·년주 순으로 읽습니다.`,
+      "만세력은 천간·지지·절기를 바탕으로 운명의 흐름을 읽는 전통 역학 도구입니다. 본 서비스는 교육·참고용 근사 계산이며, 정밀 절입·음력 변환은 전문 만세력을 권장합니다.",
+    ],
+    bullets: [
+      `년주 ${pillars.year.stemHanja}${pillars.year.branchHanja}: 선천·가문·0~15세`,
+      `월주 ${pillars.month.stemHanja}${pillars.month.branchHanja}: 성장·사회·16~30세`,
+      `일주 ${pillars.day.stemHanja}${pillars.day.branchHanja}: 본인·배우자·30~45세`,
+      `시주 ${pillars.hour.stemHanja}${pillars.hour.branchHanja}: 말년·자녀·45세 이후`,
+    ],
+    tags: ["#만세력", "#팔자"],
+  };
+}
 function pillarSection(
   id: string,
   title: string,
@@ -204,6 +256,10 @@ export function interpretFortune(result: SajuResult): DetailedReport {
     sections.push(...profile.sections);
   }
 
+  sections.push(buildManseryeokSection(result));
+  sections.push(buildHanjaGuideSection(result));
+  sections.push(...buildPeriodFortuneSections(result));
+
   sections.push(buildYear2026Section(dayElement, input.gender));
   sections.push(buildLifeAdviceSection(dayStem));
 
@@ -225,7 +281,7 @@ export function interpretFortune(result: SajuResult): DetailedReport {
       ? `${profile.nickname}(${profile.hanja}) 일간 사주 풀이`
       : "사주 상세 풀이",
     subheadline: `${input.year}년 ${input.month}월 ${input.day}일 ${input.hour}시 · ${calLabel} · ${genderLabel}`,
-    keywords: [`${dayStem}일간`, `${dayElement}오행`, "사주", "2026운"],
+    keywords: [`${dayStem}일간`, `${dayElement}오행`, "사주", "만세력", "오늘운"],
     sections,
   };
 }
