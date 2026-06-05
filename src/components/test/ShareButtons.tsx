@@ -3,6 +3,8 @@
 import { useCallback, useState, useSyncExternalStore } from "react";
 import { toPng } from "html-to-image";
 
+import { isKakaoShareAvailable, shareViaKakao } from "@/lib/kakao-share";
+
 export function ShareButtons({
   title,
   text,
@@ -23,6 +25,8 @@ export function ShareButtons({
   const url = shareUrl || pageUrl;
   const [copied, setCopied] = useState(false);
   const [capturing, setCapturing] = useState(false);
+  const [kakaoBusy, setKakaoBusy] = useState(false);
+  const kakaoEnabled = isKakaoShareAvailable();
 
   const shareText = `${text}\n${url}`;
 
@@ -46,6 +50,22 @@ export function ShareButtons({
       // cancelled
     }
     await onCopy();
+  }
+
+  async function onKakaoShare() {
+    setKakaoBusy(true);
+    try {
+      const result = await shareViaKakao({
+        title,
+        description: text,
+        url,
+      });
+      if (!result.ok && result.message) {
+        alert(result.message);
+      }
+    } finally {
+      setKakaoBusy(false);
+    }
   }
 
   async function onCapture() {
@@ -86,6 +106,17 @@ export function ShareButtons({
         <button type="button" onClick={onCopy} className="btn-secondary">
           {copied ? "복사됨" : "링크 복사"}
         </button>
+        {kakaoEnabled ? (
+          <button
+            type="button"
+            onClick={() => void onKakaoShare()}
+            disabled={kakaoBusy}
+            className="btn-secondary disabled:opacity-50"
+            data-testid="kakao-share"
+          >
+            {kakaoBusy ? "카카오…" : "카카오톡"}
+          </button>
+        ) : null}
         {captureTargetId ? (
           <button
             type="button"

@@ -34,6 +34,7 @@ export const publicEnv = {
   supabaseAnonKey: readPublic("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
   firebaseProjectId: readPublic("NEXT_PUBLIC_FIREBASE_PROJECT_ID"),
   firebaseApiKey: readPublic("NEXT_PUBLIC_FIREBASE_API_KEY"),
+  kakaoJsKey: readPublic("NEXT_PUBLIC_KAKAO_JS_KEY"),
 } as const;
 
 export function getMetadataBaseUrl(): URL {
