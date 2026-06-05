@@ -7,25 +7,46 @@ import {
   type ResultHistoryEntry,
 } from "@/lib/result-history";
 
+const EMPTY: ResultHistoryEntry[] = [];
+
+let cachedItems: ResultHistoryEntry[] = EMPTY;
+let cachedDigest = "";
+
+function digestHistory(items: ResultHistoryEntry[]): string {
+  return items
+    .map((i) => `${i.kind}:${i.id}:${i.at}:${i.href}`)
+    .join("|");
+}
+
+/** useSyncExternalStore는 데이터가 같으면 동일 참조를 반환해야 합니다. */
+function getStableHistory(): ResultHistoryEntry[] {
+  const fresh = listResultHistory();
+  const digest = digestHistory(fresh);
+  if (digest === cachedDigest) return cachedItems;
+  cachedDigest = digest;
+  cachedItems = fresh.length === 0 ? EMPTY : fresh;
+  return cachedItems;
+}
+
 function subscribe(cb: () => void) {
-  window.addEventListener("result-history-change", cb);
-  window.addEventListener("focus", cb);
+  const refresh = () => {
+    cachedDigest = "";
+    cb();
+  };
+  window.addEventListener("result-history-change", refresh);
+  window.addEventListener("focus", refresh);
   return () => {
-    window.removeEventListener("result-history-change", cb);
-    window.removeEventListener("focus", cb);
+    window.removeEventListener("result-history-change", refresh);
+    window.removeEventListener("focus", refresh);
   };
 }
 
-function getSnapshot(): ResultHistoryEntry[] {
-  return listResultHistory();
-}
-
-function getServerSnapshot(): ResultHistoryEntry[] {
-  return [];
-}
-
 export function RecentResults() {
-  const items = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const items = useSyncExternalStore(
+    subscribe,
+    getStableHistory,
+    () => EMPTY,
+  );
 
   if (items.length === 0) return null;
 
