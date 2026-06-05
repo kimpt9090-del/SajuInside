@@ -87,7 +87,7 @@ async function upsertRemote(
   const key = publicEnv.supabaseAnonKey;
   if (!url || !key) return false;
 
-  const res = await fetch(`${url}/rest/v1/user_data`, {
+  const res = await fetch(`${url}/rest/v1/user_data?on_conflict=user_id`, {
     method: "POST",
     headers: {
       apikey: key,

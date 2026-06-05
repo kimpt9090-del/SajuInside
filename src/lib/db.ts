@@ -114,7 +114,7 @@ async function submitViaFirebase(
   }
 
   const res = await fetch(
-    `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/feedbacks`,
+    `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/feedbacks?key=${encodeURIComponent(apiKey)}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },

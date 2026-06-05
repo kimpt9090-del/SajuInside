@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { useAuth } from "@/contexts/AuthProvider";
 
-export function AuthPanel() {
+export function AuthPanel({ authError = false }: { authError?: boolean }) {
   const {
     user,
     loading,
@@ -69,11 +69,24 @@ export function AuthPanel() {
 
   return (
     <div className="space-y-3" data-testid="auth-sign-in">
+      {authError ? (
+        <p
+          role="alert"
+          className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-900 dark:border-red-900 dark:bg-red-950/40 dark:text-red-100"
+          data-testid="auth-error"
+        >
+          로그인에 실패했습니다. Supabase 설정·리다이렉트 URL을 확인한 뒤 다시
+          시도해 주세요.
+        </p>
+      ) : null}
       {!cloudEnabled ? (
         <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
-          클라우드 동기화는 Supabase 설정이 필요합니다.{" "}
-          <code className="text-xs">.env.local</code>에 URL·ANON_KEY를 넣고{" "}
-          <code className="text-xs">supabase/schema.sql</code>을 실행하세요.
+          클라우드 동기화는 Supabase 설정이 필요합니다. Vercel(또는{" "}
+          <code className="text-xs">.env.local</code>)에{" "}
+          <code className="text-xs">NEXT_PUBLIC_SUPABASE_URL</code>·
+          <code className="text-xs">ANON_KEY</code>를 넣고{" "}
+          <strong>Redeploy</strong>한 뒤, Supabase에서{" "}
+          <code className="text-xs">schema.sql</code>을 실행하세요.
         </p>
       ) : (
         <p className="text-sm text-muted-foreground">

@@ -61,6 +61,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return data.session?.access_token ?? null;
     });
 
+    let sessionResolved = false;
+    const sessionTimeout = setTimeout(() => {
+      if (!sessionResolved) {
+        setSyncMessage(
+          "인증 서비스 응답이 지연되고 있습니다. 로그인 없이도 로컬 기록은 사용할 수 있습니다.",
+        );
+        setLoading(false);
+      }
+    }, 8_000);
+
     void supabase.auth
       .getSession()
       .then(({ data }) => {
@@ -74,6 +84,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSyncMessage("인증 서비스 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.");
       })
       .finally(() => {
+        sessionResolved = true;
+        clearTimeout(sessionTimeout);
         setLoading(false);
       });
 

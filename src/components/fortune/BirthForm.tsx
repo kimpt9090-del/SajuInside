@@ -187,6 +187,16 @@ export function BirthForm({
         </Field>
       </div>
 
+      {calendar === "lunar" ? (
+        <p
+          role="alert"
+          className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-900 dark:text-amber-200"
+        >
+          음력 날짜는 아직 양력으로 변환되지 않습니다. 입력한 숫자를 양력처럼
+          계산하므로, 음력 생일이라면 양력으로 바꾼 뒤 다시 조회해 주세요.
+        </p>
+      ) : null}
+
       <button type="submit" className="btn-primary w-full">
         사주 보기
       </button>
