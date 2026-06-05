@@ -1,15 +1,18 @@
 import { createBrowserClient } from "@supabase/ssr";
 
 import { publicEnv } from "@/lib/env";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 
-export function isSupabaseConfigured(): boolean {
-  return Boolean(publicEnv.supabaseUrl && publicEnv.supabaseAnonKey);
-}
+export { isSupabaseConfigured };
 
 export function createSupabaseBrowserClient() {
   if (!isSupabaseConfigured()) return null;
-  return createBrowserClient(
-    publicEnv.supabaseUrl,
-    publicEnv.supabaseAnonKey,
-  );
+  try {
+    return createBrowserClient(
+      publicEnv.supabaseUrl,
+      publicEnv.supabaseAnonKey,
+    );
+  } catch {
+    return null;
+  }
 }

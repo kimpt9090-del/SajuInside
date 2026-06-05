@@ -2,9 +2,10 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
 import { publicEnv } from "@/lib/env";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 export async function createSupabaseServerClient() {
-  if (!publicEnv.supabaseUrl || !publicEnv.supabaseAnonKey) {
+  if (!isSupabaseConfigured()) {
     return null;
   }
 

@@ -61,26 +61,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return data.session?.access_token ?? null;
     });
 
-    void supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setCloudUserId(data.session?.user?.id ?? null);
-      setLoading(false);
-      if (data.session?.user) {
-        void runCloudSync(data.session.user.id);
-      }
-    });
+    void supabase.auth
+      .getSession()
+      .then(({ data }) => {
+        setSession(data.session);
+        setCloudUserId(data.session?.user?.id ?? null);
+        if (data.session?.user) {
+          void runCloudSync(data.session.user.id);
+        }
+      })
+      .catch(() => {
+        setSyncMessage("인증 서비스 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession);
-      setCloudUserId(nextSession?.user?.id ?? null);
-      if (nextSession?.user) {
-        void runCloudSync(nextSession.user.id);
-      }
-    });
+    let subscription: { unsubscribe: () => void } | null = null;
+    try {
+      const result = supabase.auth.onAuthStateChange((_event, nextSession) => {
+        setSession(nextSession);
+        setCloudUserId(nextSession?.user?.id ?? null);
+        if (nextSession?.user) {
+          void runCloudSync(nextSession.user.id);
+        }
+      });
+      subscription = result.data.subscription;
+    } catch {
+      queueMicrotask(() => setLoading(false));
+    }
 
-    return () => subscription.unsubscribe();
+    return () => subscription?.unsubscribe();
   }, [supabase, runCloudSync]);
 
   const signInWithEmail = useCallback(

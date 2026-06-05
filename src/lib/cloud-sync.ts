@@ -1,5 +1,5 @@
 import { publicEnv } from "@/lib/env";
-import { isSupabaseConfigured } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 import type { ResultHistoryEntry, UserProfile } from "@/lib/result-history";
 
 export type CloudSnapshot = {
